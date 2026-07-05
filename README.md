@@ -53,9 +53,13 @@ import differentiable_tda as dtda
 # Batch of 4, 10,000 nodes, 64 features
 x = torch.rand((4, 10000, 64), dtype=torch.float32, device='cuda', requires_grad=True)
 
-# Returns only edges where distance <= 3.2
-indices, values = dtda.radius_graph(x, radius=3.2, max_edges=500000)
+# Returns only edges where distance <= 3.2 by reducing 3D to 2D
+results = []
+for i in range(x.shape[0]):
+    # Her batch için ayrı çalıştır
+    idx, val = dtda.radius_graph(x[i], radius=3.2, max_edges=500000)
+    results.append(val.sum())
 
-loss = values.sum()
-loss.backward() # Safe, NaN-free sparse gradients!
+loss = torch.stack(results).sum()
+loss.backward()
 ```
