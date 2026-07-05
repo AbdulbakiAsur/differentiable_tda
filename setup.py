@@ -12,42 +12,20 @@ def check_cuda():
     except Exception:
         return False
 
-use_cuda = check_cuda()
-
-# [CRITICAL FIX]: PyTorch C++11 ABI Dualism and GCC Standards
-abi_val = 1 if torch._C._GLIBCXX_USE_CXX11_ABI else 0
-abi_flag = f'-D_GLIBCXX_USE_CXX11_ABI={abi_val}'
-
-# We force C++17 to ensure compatibility with PyTorch 2.x and avoid legacy GCC syntax errors
-cxx_args = ['-O3', '-g', '-std=c++17', abi_flag]
-
-if use_cuda:
-    print("🚀 CUDA detected! Building GPU-accelerated (C++ & CUDA) module...")
-    nvcc_args = ['-O3', '-g', '-std=c++17', '--use_fast_math', abi_flag, '-DWITH_CUDA']
-    cxx_args.append('-DWITH_CUDA')
-    
+if check_cuda():
     ext_modules = [
         CUDAExtension(
             name='differentiable_tda._C',
-            sources=[
-                'csrc/tda_core.cpp',
-                'csrc/tda_kernel.cu',
-            ],
-            extra_compile_args={
-                'cxx': cxx_args, 
-                'nvcc': nvcc_args
-            }
+            sources=['csrc/tda_core.cpp', 'csrc/tda_kernel.cu'],
+            extra_compile_args={'cxx': ['-O3', '-g', '-DWITH_CUDA'], 'nvcc': ['-O3', '-g', '--use_fast_math', '-DWITH_CUDA']}
         )
     ]
 else:
-    print("⚠️ CUDA not found! Building CPU-only (C++) fallback module...")
     ext_modules = [
         CppExtension(
             name='differentiable_tda._C',
-            sources=[
-                'csrc/tda_core.cpp',
-            ],
-            extra_compile_args=cxx_args
+            sources=['csrc/tda_core.cpp'],
+            extra_compile_args=['-O3', '-g']
         )
     ]
 
@@ -56,7 +34,5 @@ setup(
     version='0.1.0',
     packages=['differentiable_tda'],
     ext_modules=ext_modules,
-    cmdclass={
-        'build_ext': BuildExtension
-    }
+    cmdclass={'build_ext': BuildExtension}
 )
