@@ -12,12 +12,19 @@ def check_cuda():
     except Exception:
         return False
 
+# ESKİ GCC VE ABI KORUMASI: PyTorch 2.x kesinlikle C++17 ve doğru ABI bayrağı ister!
+abi_version = "1" if torch._C._GLIBCXX_USE_CXX11_ABI else "0"
+cxx_args = ['-O3', '-g', '-std=c++17', f'-D_GLIBCXX_USE_CXX11_ABI={abi_version}']
+
 if check_cuda():
     ext_modules = [
         CUDAExtension(
             name='differentiable_tda._C',
             sources=['csrc/tda_core.cpp', 'csrc/tda_kernel.cu'],
-            extra_compile_args={'cxx': ['-O3', '-g', '-DWITH_CUDA'], 'nvcc': ['-O3', '-g', '--use_fast_math', '-DWITH_CUDA']}
+            extra_compile_args={
+                'cxx': cxx_args + ['-DWITH_CUDA'],
+                'nvcc': ['-O3', '-g', '-std=c++17', '--use_fast_math', f'-D_GLIBCXX_USE_CXX11_ABI={abi_version}', '-DWITH_CUDA']
+            }
         )
     ]
 else:
@@ -25,7 +32,7 @@ else:
         CppExtension(
             name='differentiable_tda._C',
             sources=['csrc/tda_core.cpp'],
-            extra_compile_args=['-O3', '-g']
+            extra_compile_args=cxx_args
         )
     ]
 
