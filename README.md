@@ -8,14 +8,14 @@ A hardware-accelerated, memory-efficient, and fully differentiable C++/CUDA back
 
 Designed specifically for **high-dimensional financial time-series** and **anomaly detection**, this package replaces PyTorch's native $O(N^2)$ dense distance computations with $O(E)$ Sparse Radius Graphs, achieving up to **25x speedups** while preventing catastrophic gradient explosions.
 
-## 🔥 Key Features
+## Key Features
 
 * **Sparse Radius Graphs:** Computes distances only for topologically relevant points ($D_{ij} \le R$), reducing VRAM usage from tens of Gigabytes to mere Megabytes.
 * **Topological Deadzone:** A custom hardware-level threshold that drops gradients for identical nodes, completely eliminating `NaN` gradient explosions caused by zero-distance divisions.
 * **Batched 3D Execution:** Native support for `(B, N, D)` tensors, seamlessly integrating with modern Deep Learning pipelines (BERT, EfficientNet) and production Triton servers.
 * **Zero-Copy Memory:** Bypasses standard ATen overhead by directly accessing contiguous physical memory blocks on the GPU.
 
-## ⚡ Benchmark (Native vs. Custom CUDA)
+## Benchmark (Native vs. Custom CUDA)
 
 Tested on a 64-dimensional financial vector space on an RTX-class GPU (Radius = 3.2):
 
@@ -27,7 +27,7 @@ Tested on a 64-dimensional financial vector space on an RTX-class GPU (Radius = 
 | **20,000** | 613.77 ms    | **67.11 ms**| **~9x** | 1,530.95 MB  | **49.25 MB**| ~96%       |
 | **40,000** | 2,459.53 ms  | **268.74 ms**| **~9x** | 6,113.83 MB  | **111.84 MB**| **~98%** |
 
-## 🛠️ Installation
+## Installation
 
 Ensure you have a C++ compiler and CUDA Toolkit installed (CUDA 12.x recommended).
 
@@ -45,7 +45,7 @@ cd differentiable_tda
 pip install -e .
 ```
 
-## 🚀 Quick Start
+## Quick Start
 ```code
 import torch
 import differentiable_tda as dtda
