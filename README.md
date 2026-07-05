@@ -32,7 +32,7 @@ Tested on a 64-dimensional financial vector space on an RTX-class GPU (Radius = 
 Ensure you have a C++ compiler and CUDA Toolkit installed (CUDA 12.x recommended).
 
 **Option 1: Direct Install (Recommended for Users)**
-Install directly from GitHub without cloning the repository:
+Install directly from the repository:
 ```bash
 pip install --upgrade --no-cache-dir git+https://github.com/AbdulbakiAsur/differentiable_tda.git
 ```
