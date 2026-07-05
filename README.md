@@ -34,13 +34,13 @@ Ensure you have a C++ compiler and CUDA Toolkit installed (CUDA 12.x recommended
 **Option 1: Direct Install (Recommended for Users)**
 Install directly from GitHub without cloning the repository:
 ```bash
-pip install --upgrade --no-cache-dir git+https://github.com/yourusername/differentiable_tda.git
+pip install --upgrade --no-cache-dir git+https://github.com/AbdulbakiAsur/differentiable_tda.git
 ```
 
 **Option 2: Install from Source (For Development)**
 If you want to modify the custom CUDA kernels or contribute to the project:
 ```bash
-git clone https://github.com/yourusername/differentiable_tda.git
+git clone https://github.com/AbdulbakiAsur/differentiable_tda.git
 cd differentiable_tda
 pip install -e .
 ```
