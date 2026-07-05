@@ -1,0 +1,15 @@
+# pyproject.toml
+[build-system]
+# Require torch and ninja BEFORE setup.py is even executed
+requires = ["setuptools", "wheel", "torch>=2.0.0", "ninja"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "differentiable_tda"
+version = "0.1.0"
+description = "Hardware-accelerated, differentiable Topological Data Analysis layer"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "torch>=2.0.0"
+]

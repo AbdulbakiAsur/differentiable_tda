@@ -1,0 +1,36 @@
+name: CI Build and Test
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Set up Python 3.11
+      uses: actions/setup-python@v4
+      with:
+        python-version: "3.11"
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+
+    - name: Build C++/CUDA Extension
+      run: |
+        # GitHub Actions standard runners lack physical GPUs.
+        # This step verifies successful compilation of the C++/CUDA toolchain.
+        pip install -e . --no-build-isolation
+
+    - name: Run CPU/Fallback Tests
+      run: |
+        # Executes the test suite. Ensure GPU-only tests are properly skipped
+        # or mocked in the test files when torch.cuda.is_available() is False.
+        pytest tests/ -v
